@@ -1,0 +1,9 @@
+com/summer/com/connector/http/HttpEngineImpl.class
+com/summer/com/connector/http/BaseRequest.class
+com/summer/com/connector/http/BaseResponse.class
+com/summer/com/connector/http/HttpCode.class
+com/summer/com/connector/http/Constants.class
+com/summer/com/connector/http/Operation.class
+com/summer/com/connector/http/HttpRequest.class
+com/summer/com/connector/http/HttpEngine.class
+com/summer/com/connector/http/utils/HttpConfigUtil.class
