@@ -5,21 +5,22 @@ import java.lang.{String => jstring}
 import java.util.{HashMap => jmap}
 
 import com.google.gson.GsonBuilder
-import com.summer.com.connector.http._
+import com.google.gson.reflect.TypeToken
 import com.summer.connector.http.components._
+import com.summer.connector.http._
 import org.slf4j.LoggerFactory
 
 import scala.concurrent.{ExecutionContext, Future}
 
-sealed trait RequestEngine[T] {
+sealed trait RequestEngine {
 
-  def send(req: Request)(implicit ec: ExecutionContext): Future[Either[Failure, Response[T]]]
+  def send[T](req: Request)(implicit ec: ExecutionContext): Future[Either[Failure, Response[T]]]
 
 }
 
-class RequestEngineImpl[T] extends RequestEngine[T] {
+class RequestEngineImpl extends RequestEngine {
 
-  private val LOGGER = LoggerFactory.getLogger(classOf[RequestEngineImpl[T]])
+  private val LOGGER = LoggerFactory.getLogger(classOf[RequestEngineImpl])
 
   private val httpEngine: HttpEngine = new HttpEngineImpl
 
@@ -43,12 +44,12 @@ class RequestEngineImpl[T] extends RequestEngine[T] {
     httpReq
   }
 
-  def transformResponse(data: jstring): Response[T] = {
+  def transformResponse[T](data: jstring): Response[T] = {
     val gson = new GsonBuilder().create()
-    Response(gson.fromJson(data, classOf[T]))
+    Response(gson.fromJson(data, new TypeToken[T](){}.getType))
   }
 
-  override def send(req: Request)(implicit ec: ExecutionContext): Future[Either[Failure, Response[T]]] = {
+  override def send[T](req: Request)(implicit ec: ExecutionContext): Future[Either[Failure, Response[T]]] = {
 
     // Asynchronous send to HttpEngine
     val futureResponse : Future[Either[Failure, Response[T]]]= Future {
@@ -61,10 +62,10 @@ class RequestEngineImpl[T] extends RequestEngine[T] {
       } catch {
         case exception: IOException=>
           LOGGER.error("Error occurs when send request. The message is: {}", exception.getMessage)
-          Left(Internal_Failure())
-        case _ =>
+          Left(new Internal_Failure)
+        case _: Throwable =>
           LOGGER.error("Error occurs when send request")
-          Left(Server_Failure())
+          Left(new Server_Failure)
       }
 
     }

@@ -1,3 +1,5 @@
 package com.summer.connector.http.components
 
-case class Response[+A](data: A) extends Serializable
+import com.summer.connector.http.BaseResponse
+
+case class Response[+A](data: A) extends BaseResponse

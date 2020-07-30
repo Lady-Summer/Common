@@ -7,8 +7,14 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="Data-Structure" />
+        <module name="Algorithms" />
         <module name="Connector" />
+        <module name="Log" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Common" target="1.5" />
+    </bytecodeTargetLevel>
   </component>
 </project>
